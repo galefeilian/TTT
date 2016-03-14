@@ -1,54 +1,55 @@
-function AIForTicTacToe(currentModel){
-    var d = {};
-    function AIForTicTacToeSub(currentModel,d){
-        var maxPointSoFar = -2;
-        var currentPlayer = currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers];
-        var nextPlayer = currentModel.players[(currentModel.movesPlayed+1) % currentModel.numOfPlayers];
-        if(currentModel.isDraw()){
-            if(! ([currentPlayer] in d)){
-                d[currentPlayer] = {};
-            }
-            d[currentPlayer][currentModel.gameBoard] = {};
-			d[currentPlayer][currentModel.gameBoard].play = [-1,-1];
-			d[currentPlayer][currentModel.gameBoard].maxPointCanGet = 0;
-        }else{
-            var row = 0;
-            var win = false;
-            while(row < currentModel.gameBoardSize[0] && win === false){
-                var col = 0;
-                while(col < currentModel.gameBoardSize[1] && win === false){
-                    var copyOfCurrentModel = copyModel(currentModel);
-                    if(copyOfCurrentModel.gameBoard[row][col] === "-"){
-                        copyOfCurrentModel.makeMove(row,col);
-                        if(copyOfCurrentModel.playerWin()){
-                            var maxPointCanGet = 1;
-                            win = true;
-                        }else{
-                            if(!([nextPlayer][copyOfCurrentModel.gameBoard] in d)){
-                                AIForTicTacToeSub(copyOfCurrentModel,d)
-                            }
-                            var maxPointCanGet = d[nextPlayer][copyOfCurrentModel.gameBoard].maxPointCanGet * -1;
+function AIForTicTacToe(currentModel,d){
+    if(!d){
+        d = {};
+    }
+    var maxPointSoFar = -2;
+    var currentPlayer = currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers];
+    var nextPlayer = currentModel.players[(currentModel.movesPlayed+1) % currentModel.numOfPlayers];
+    if(currentModel.isDraw()){
+        if(! (currentPlayer in d)){
+            d[currentPlayer] = {};
+        }
+        d[currentPlayer][currentModel.gameBoard] = {};
+		d[currentPlayer][currentModel.gameBoard].play = [-1,-1];
+		d[currentPlayer][currentModel.gameBoard].maxPointCanGet = 0;
+    }else{
+        var row = 0;
+        var win = false;
+        while(row < currentModel.gameBoardSize[0] && win === false){
+            var col = 0;
+            while(col < currentModel.gameBoardSize[1] && win === false){
+                var copyOfCurrentModel = copyModel(currentModel);
+                if(copyOfCurrentModel.gameBoard[row][col] === "-"){
+                    copyOfCurrentModel.makeMove(row,col);
+                    if(copyOfCurrentModel.playerWin()){
+                        var maxPointCanGet = 1;
+                        win = true;
+                    }else{
+                        if(d[nextPlayer] === undefined){
+                            AIForTicTacToe(copyOfCurrentModel,d)
                         }
-                        if(maxPointCanGet > maxPointSoFar){
-                            maxPointSoFar = maxPointCanGet;
-                            if(! ([currentPlayer] in d)){
-                                d[currentPlayer] = {};
-                            }
-                            d[currentPlayer][currentModel.gameBoard]={};
-						    d[currentPlayer][currentModel.gameBoard].play = [row,col];
-						    d[currentPlayer][currentModel.gameBoard].maxPointCanGet = maxPointCanGet;
+                        if(d[nextPlayer][copyOfCurrentModel.gameBoard] === undefined){
+                            AIForTicTacToe(copyOfCurrentModel,d)
                         }
+                        var maxPointCanGet = d[nextPlayer][copyOfCurrentModel.gameBoard].maxPointCanGet * -1;
                     }
-                    col = col + 1;
+                    if(maxPointCanGet > maxPointSoFar){
+                        maxPointSoFar = maxPointCanGet;
+                        if(! (currentPlayer] in d)){
+                            d[currentPlayer = {};
+                        }
+                        d[currentPlayer][currentModel.gameBoard]={};
+						d[currentPlayer][currentModel.gameBoard].play = [row,col];
+						d[currentPlayer][currentModel.gameBoard].maxPointCanGet = maxPointCanGet;
+                    }
                 }
-                row = row + 1;
+                col = col + 1;
             }
+            row = row + 1;
         }
     }
-    AIForTicTacToeSub(currentModel,d)
-    console.log(d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard])
+    return d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard]
 }
-AIForTicTacToe(m)
 function copyModel(currentModel){
 	copyOfCurrentModel = new Model();
 	copyOfCurrentModel.gameBoardSize = currentModel.gameBoardSize;
