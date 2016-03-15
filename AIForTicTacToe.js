@@ -6,7 +6,8 @@ function AIForTicTacToe(currentModel,d){
     var currentPlayer = currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers];
     var nextPlayer = currentModel.players[(currentModel.movesPlayed+1) % currentModel.numOfPlayers];
     if(currentModel.isDraw()){
-        if(! (currentPlayer in d)){
+        if(! (
+            currentPlayer in d)){
             d[currentPlayer] = {};
         }
         d[currentPlayer][currentModel.gameBoard] = {};
@@ -69,3 +70,9 @@ function copyModel(currentModel){
 	copyOfCurrentModel.lastMove.col = currentModel.lastMove.col;
 	return copyOfCurrentModel;
 }
+self.onmessage = function(e){
+    AIForTicTacToe(e.data);
+    self.postMessage(d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard]  )
+}
+
+
