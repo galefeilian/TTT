@@ -17,21 +17,25 @@ playButton.addEventListener("click", function (){
 })
 function addEventListenerForCells(tableCell){
 	tableCell.addEventListener("click",function(){
-		gameModel.makeMove(tableCell.parentNode.rowIndex, tableCell.cellIndex)
-		tableCell.innerHTML = gameModel.gameBoard[tableCell.parentNode.rowIndex][tableCell.cellIndex]
-		if(gameModel.playerWin()){
-			alert("You Win")
-		}else if(gameModel.isDraw()){
-			alert("Draw")
-		}else{
-			var play = AIForTicTacToe(gameModel);
-			gameModel.makeMove(play[0],play[1])
-			tableCell.parentNode.parentNode.rows[play[0]].cells[play[1]].innerHTML = gameModel.gameBoard[play[0]][play[1]];
+		if(gameModel.isValidMove(tableCell.parentNode.rowIndex, tableCell.cellIndex)){
+			gameModel.makeMove(tableCell.parentNode.rowIndex, tableCell.cellIndex)
+			tableCell.innerHTML = gameModel.gameBoard[tableCell.parentNode.rowIndex][tableCell.cellIndex]
 			if(gameModel.playerWin()){
-				alert("Loser")
-			}else if (gameModel.isDraw()){
+				alert("You Win")
+			}else if(gameModel.isDraw()){
 				alert("Draw")
+			}else{
+				var play = AIForTicTacToe(gameModel);
+				gameModel.makeMove(play[0],play[1])
+				tableCell.parentNode.parentNode.rows[play[0]].cells[play[1]].innerHTML = gameModel.gameBoard[play[0]][play[1]];
+				if(gameModel.playerWin()){
+					alert("Loser")
+				}else if (gameModel.isDraw()){
+					alert("Draw")
+				}
 			}
+		}else{
+			alert("can't move there")
 		}
 	})
 }
