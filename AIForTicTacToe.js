@@ -27,17 +27,17 @@ function AIForTicTacToe(currentModel,d){
                         win = true;
                     }else{
                         if(d[nextPlayer] === undefined){
-                            AIForTicTacToe(copyOfCurrentModel,d)
+                            AIForTicTacToe(copyOfCurrentModel,d);
                         }
                         if(d[nextPlayer][copyOfCurrentModel.gameBoard] === undefined){
-                            AIForTicTacToe(copyOfCurrentModel,d)
+                            AIForTicTacToe(copyOfCurrentModel,d);
                         }
                         var maxPointCanGet = d[nextPlayer][copyOfCurrentModel.gameBoard].maxPointCanGet * -1;
                     }
                     if(maxPointCanGet > maxPointSoFar){
                         maxPointSoFar = maxPointCanGet;
-                        if(! (currentPlayer] in d)){
-                            d[currentPlayer = {};
+                        if(! (currentPlayer in d)){
+                            d[currentPlayer] = {};
                         }
                         d[currentPlayer][currentModel.gameBoard]={};
 						d[currentPlayer][currentModel.gameBoard].play = [row,col];
@@ -49,7 +49,7 @@ function AIForTicTacToe(currentModel,d){
             row = row + 1;
         }
     }
-    return d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard]
+    return d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard].play;
 }
 function copyModel(currentModel){
 	copyOfCurrentModel = new Model();
@@ -70,9 +70,3 @@ function copyModel(currentModel){
 	copyOfCurrentModel.lastMove.col = currentModel.lastMove.col;
 	return copyOfCurrentModel;
 }
-self.onmessage = function(e){
-    AIForTicTacToe(e.data);
-    self.postMessage(d[currentModel.players[currentModel.movesPlayed % currentModel.numOfPlayers]][currentModel.gameBoard]  )
-}
-
-

@@ -18,10 +18,10 @@ function createTable(rows,columns){
 			cell.style.fontFamily="verdana,sans-serif";
 		}
 	}
-	document.body.appendChild(x);	
+	document.body.appendChild(x);
+	return x;	
 }
-createTable(3,3);
 function setCellText(row,col,str){
-	var x = document.getElementById("tttTable").getElementsByClassName("row")[row].getElementsByClassName("game-gird-cell")[col];
+	var x = document.getElementById("tttTable").rows[row].cells[col];
 	x.innerHTML=str;
 }
