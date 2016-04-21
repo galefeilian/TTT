@@ -1,0 +1,21 @@
+function ABAI(model,alpha,beta,d){
+	if(!d){
+		d = {};
+	}
+	if(!alpha){
+		var alpha = -Infinity;
+	}
+	if(!beta){
+		var beta = Infinity;
+	}
+	var nextPlayer = currentModel.players[(currentModel.movesPlayed+1) % currentModel.numOfPlayers];
+    if(currentModel.isDraw()){
+        if(! (
+            currentPlayer in d)){
+            d[currentPlayer] = {};
+        }
+        d[currentPlayer][currentModel.gameBoard] = {};
+		d[currentPlayer][currentModel.gameBoard].play = [-1,-1];
+		d[currentPlayer][currentModel.gameBoard].maxPointCanGet = 0;
+
+}

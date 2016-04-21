@@ -34,7 +34,7 @@ function AIForTicTacToe(currentModel,d){
                         }
                         var maxPointCanGet = d[nextPlayer][copyOfCurrentModel.gameBoard].maxPointCanGet * -1;
                     }
-                    if(maxPointCanGet > maxPointSoFar){
+                    if(maxPointCanGet >= maxPointSoFar){
                         maxPointSoFar = maxPointCanGet;
                         if(! (currentPlayer in d)){
                             d[currentPlayer] = {};

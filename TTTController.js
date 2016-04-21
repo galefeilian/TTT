@@ -29,7 +29,7 @@ function addEventListenerForCells(tableCell){
 				gameModel.makeMove(play[0],play[1])
 				tableCell.parentNode.parentNode.rows[play[0]].cells[play[1]].innerHTML = gameModel.gameBoard[play[0]][play[1]];
 				if(gameModel.playerWin()){
-					alert("YOU ARE A LOSER")
+					alert("YOU LOST")
 				}else if (gameModel.isDraw()){
 					alert("Draw")
 				}

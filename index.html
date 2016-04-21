@@ -7,9 +7,17 @@
  			<script type="text/javascript" src = "model.js"></script>
  			<script type="text/javascript" src = "AIForTicTacToe.js"></script>
  			<script type="text/javascript" src = "ttt-game.js"></script>
+ 			<script type="text/javascript" src = "worker.js"></script>
 		</head>
  		<body>
-			<h1>Let's play Tic-tac-toe</h1>
+			<h1>Let's play Tic-Tac-Toe</h1>
+			<script type="text/javascript">
+			var worker = new Worker("worker.js");
+			worker.postMessage(["a"]);
+			worker.onmessage= function(e){
+				console.log(e.data)
+			}
+			</script>
 			<button id="playButton">let's play</button>
 			<script type="text/javascript"src = "TTTController.js"></script>
 		</body>
