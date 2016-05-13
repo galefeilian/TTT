@@ -30,12 +30,16 @@ var modelPrototype={//prototype
         this.numOfPlayers++;
     },
     isValidMove:function(x,y){
-        if(this.gameBoard[x][y] == "-"){
-            return true;
+        if (this.winner == null){
+            if(this.gameBoard[x][y] == "-"){
+                return true;
+            }else{
+                return false;
+            };
         }else{
             return false;
         }
-    },
+    },  
     playerWin:function(){
         var playerWinned = false;
         var maxNumOfConsecutive = 1;

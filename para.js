@@ -14,7 +14,7 @@ function tttMapper(inputs){
 				}
 			}
 		}
-		return childrenNode.map(function(child){return {key:child,value:{parentModel:currentModelStr,isAlTurn:!currentModelInput.value.isAITurn}}})
+		return childrenNode.map(function(child){return {key:child,value:{parentModel:currentModelStr,isAITurn:!currentModelInput.value.isAITurn}}})
 	});
 }
 function flatten(itemList) {
@@ -39,20 +39,70 @@ function tttReducer(mapperOut){
 	var i = 0;
 	var reducedList = [];
 	while(i < mapperOut.length) {
-		console.log(i)
 		var key = mapperOut[i].key;
-		console.log(key)
-		var v = [];
-		var sameChildList = {key: key, value:[]};
+		var sameChildList = {key: key, value:{parentModel:[]}};
 		while(i < mapperOut.length && key === mapperOut[i].key) {
-			console.log(i)
-			console.log(mapperOut[i])
-			sameChildList.value.push(mapperOut[i].value.parentModel);
+			sameChildList.value.parentModel.push(mapperOut[i].value.parentModel);
 			i++;
 		}
-		reducedList.push({key:key,value:{parentModel:sameChildList.value.reduce(function (a,b){
-			return a.push(b.value.parentModel)}),isAITurn: !mapperOut[i-1].value.isAITurn}
-		})
+		reducedList.push({key:key,value:{parentModel:sameChildList.value.parentModel.reduce(function (a,b){
+			return a.concat(b)},[]),isAITurn: !mapperOut[i-1].value.isAITurn
+		}
+	})
 	}
 	return reducedList
+}
+function tttMapper2(inputs){
+	var outputs={};
+	var currentModel = JSON.parse(inputs.key);
+	currentModel = copyModel(currentModel);
+	var valueOfCurrentModel = inputs.value
+	var point = 0;
+	if (currentModel.isDraw){
+		point = 2;
+	}else if(currentModel.playerWin && valueOfCurrentModel.isAITurn){
+		point = 1;
+	}else if(currentModel.playerWin && !(valueOfCurrentModel.isAITurn)){
+		point = 3;
+	}
+	outputs.key = JSON.stringify(currentModel);
+	outputs.value = {};
+	outputs.value.parentModel = valueOfCurrentModel.parentModel;
+	outputs.isAITurn = valueOfCurrentModel.isAITurn;
+	outputs.value.point = point;
+	return outputs
+}
+function reducer2(inputs){
+	return inputs;
+}
+function mapper3(inputs){
+	if (inputs.value.parentModel !== undefined){
+		return inputs.map(function (input){
+			return {key:{childModel:input.key,parentModel:input.value.parentModel},value:{isAITurn:input.value.isAITurn,points:input.value.points}};
+		});
+	}else{
+		return inputs.map(function(input){
+			var currentModel = JSON.parse(input.key);
+			var output = [];
+			for (var row = 0; row<3; row++){
+				for(var col = 0; col<3; col++){
+					if (currentModel.gameBoard[row][col] === currentModel.lastMove.symbol){
+						var copyOfCurrentModel = copyModel(currentModel);
+						copyOfCurrentModel.gameBoard[row][col] = '-';
+						copyOfCurrentModel.movesPlayed = copyOfCurrentModel.movesPlayed - 1;
+						if (copyOfCurrentModel.lastMove.playerNum ===1){
+							copyOfCurrentModel.lastMove = copyOfCurrentModel.players[1];
+						}else{
+							copyOfCurrentModel.lastMove = copyOfCurrentModel.players[0];
+						}
+						copyOfCurrentModel.lastMove.row = null;
+						copyOfCurrentModel.lastMove.col = null;
+						var outputObj ={key:{childModel:copyOfCurrentModel,possibleParentModel:copyOfCurrentModel},value:{isAITurn:input.value.isAITurn,points:input.value.points,isPoss:true}};
+						output.push(outputObj);
+					}
+				}
+			}
+			return output;
+		});
+	}
 }
